@@ -6,9 +6,9 @@ var GetFavouriteRepositories=React.createClass({
 	getInitialState:function(){
 		return({SelectOptions:[], value:'select', FavouriteRepoObj:[]});
 	},
-	
+
 	componentDidMount:function(){
-		var url="http://localhost:8085/repos/GetCategoryOptions";
+		var url="http://localhost:8080/repos/GetCategoryOptions";
 		$.ajax({
 			url:url,
 			type:'GET',
@@ -29,7 +29,7 @@ var GetFavouriteRepositories=React.createClass({
 		var categoryObj={};
 		categoryObj.category=event.target.value;
 		this.setState({value:event.target.value});
-		var url="http://localhost:8085/repos/GetCategoryFavourites";
+		var url="http://localhost:8080/repos/GetCategoryFavourites";
 		$.ajax({
 			url:url,
 			type:'POST',
@@ -40,7 +40,7 @@ var GetFavouriteRepositories=React.createClass({
 				this.setState({FavouriteRepoObj:data});
 			}.bind(this),
 			error:function(err){
-				console.log(err);	
+				console.log(err);
 			}.bind(this)
 		});
 	},
@@ -51,7 +51,7 @@ var GetFavouriteRepositories=React.createClass({
 		UpdateObj.repoID=repoID;
 		UpdateObj.Description=Description;
 
-		var url="http://localhost:8085/repos/UpdateRepository";
+		var url="http://localhost:8080/repos/UpdateRepository";
 		$.ajax({
 			url:url,
 			type:'PUT',
@@ -82,7 +82,7 @@ var GetFavouriteRepositories=React.createClass({
 		alert(repoID);
 		var DeleteRepoObj={};
 		DeleteRepoObj.repoID=repoID;
-		var url="http://localhost:8085/repos/DeleteRepository";
+		var url="http://localhost:8080/repos/DeleteRepository";
 		$.ajax({
 			url:url,
 			type:'DELETE',
@@ -104,8 +104,8 @@ var GetFavouriteRepositories=React.createClass({
 	},
 
 	render:function(){
-		
-		
+
+
 		console.log(this.state.SelectOptions.length);
 		var SelectListArr=this.state.SelectOptions.map(function(option){
 			console.log('entering');

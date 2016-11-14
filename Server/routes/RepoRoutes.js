@@ -6,7 +6,7 @@ DBConnection();
 
 //Adding the repositories in the database
 
-router.route('/AddRepositories').post(function(req,res,next){
+router.route('/AddRepositories').post(isLoggedIn,function(req,res,next){
 	if(req.body){
 		req.body.Description="Default Description, Please Update";
 		var RepositoryVar = new Repositories(req.body);
@@ -24,7 +24,7 @@ router.route('/AddRepositories').post(function(req,res,next){
 	}
 });
 
-router.route('/GetCategoryOptions').get(function(req,res,next){
+router.route('/GetCategoryOptions').get(isLoggedIn,function(req,res,next){
 	var List=[];
 	Repositories.find({}, {Category:true, _id:false}, function(err,docs){
 		if(err){
@@ -32,7 +32,7 @@ router.route('/GetCategoryOptions').get(function(req,res,next){
 		}
 		else{
 			var index=0;
-			docs.forEach(function(data,err){			
+			docs.forEach(function(data,err){
 				 index=List.findIndex(function(element){
 				 	return element===data.Category;
 				});
@@ -43,11 +43,11 @@ router.route('/GetCategoryOptions').get(function(req,res,next){
 			}
 			});
 			res.send(List);
-			} 	
+			}
 	});
 });
 
-router.route('/GetCategoryFavourites').post(function(req,res,next){
+router.route('/GetCategoryFavourites').post(isLoggedIn,function(req,res,next){
 	if(req.body){
 	console.log(typeof req.body.category);
 	Repositories.find({Category:req.body.category}, function(err, docs){
@@ -64,7 +64,7 @@ router.route('/GetCategoryFavourites').post(function(req,res,next){
 	}
 });
 
-router.route('/UpdateRepository').put(function(req,res,next){
+router.route('/UpdateRepository').put(function(isLoggedIn,req,res,next){
 	if(req.body){
 		console.log(req.body);
 		Repositories.update({repoID:req.body.repoID}, {Category:req.body.Category, Description:req.body.Description});
@@ -76,7 +76,7 @@ router.route('/UpdateRepository').put(function(req,res,next){
 	}
 });
 
-router.route('/DeleteRepository').delete(function(req,res,next){
+router.route('/DeleteRepository').delete(isLoggedIn,function(req,res,next){
 	if(req.body){
 		console.log(req.body);
 		Repositories.remove({repoID:req.body.repoID}, function(err){
@@ -95,4 +95,15 @@ router.route('/DeleteRepository').delete(function(req,res,next){
 	}
 });
 
+function isLoggedIn(req,res,next){
+
+ if(req.isAuthenticated()){
+ 	console.log("Inside isLoggedIn");
+   return next();
+ }
+ else{
+ 	console.log("Inside isLoggedIn Notlogin");
+   res.json('not authenticated');
+ }
+}
 module.exports=router;
